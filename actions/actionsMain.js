@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch'
 
 export const REQUEST_LIST = 'REQUEST_LIST';
 function requestList() {
@@ -7,7 +7,7 @@ function requestList() {
     }
 }
 
-export const RECEIVE_LIST = 'RECEIVE_LIST';
+export const RECEIVED_LIST = 'RECEIVE_LIST';
 function receiveList(json)  {
     return {
         type: RECEIVE_LIST,
@@ -19,10 +19,12 @@ function receiveList(json)  {
 
 
 export function fecthMainList() {
-    return dispatch => {
-        dispatch(requestList())
-        return fetch(`https://swapi.co/api/people`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveList(json)))
-    }
+    return fetch('https://facebook.github.io/react-native/movies.json')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson.movies;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }

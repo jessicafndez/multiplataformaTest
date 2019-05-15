@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import PropTypes from 'prop-types'; 
 import { Provider } from 'react-redux';
-import configureStore from '../configureStore';
+import configureStore from './configureStore';
 
-import { Main }  from './components/Main';
+import Navbar from './components/Navbar';
+import Main from './components/main/Main';
 
 // out
 
 
 // const
-const store = configureStore();
+// const store = configureStore();
 
 
 const instructions = Platform.select({
@@ -20,28 +21,18 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {};
-class App extends Component<Props> {
+
+class App extends Component {
   render() {
     return (
-      <div>
-          <Provider store={}>
-            <Main>
-            </Main>
-          </Provider>
-      </div>
-      // <View style={styles.container}>
-      //   <Text style={styles.welcome}>Welcome to React Native!</Text>
-      //   <Text style={styles.instructions}>To get started, edit App.js</Text>
-      //   <Text style={styles.instructions}>{instructions}</Text>
-      // </View>
+      <View style={{flex: 1}}>
+        <Navbar></Navbar>
+        <Main></Main>
+      </View>
     );
   }
 }
 
-App.prototype = {
-  store: PropTypes.object.isRequired;
-}
 
 const styles = StyleSheet.create({
   container: {
