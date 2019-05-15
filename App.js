@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import { createStore } from 'redux';
+import PropTypes from 'prop-types'; 
+import { Provider } from 'react-redux';
+import configureStore from '../configureStore';
+
+import { Main }  from './components/Main';
+
+// out
 
 
 // const
-const store = createStore(mainReducers);
+const store = configureStore();
 
 
 const instructions = Platform.select({
@@ -15,16 +21,26 @@ const instructions = Platform.select({
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+      <div>
+          <Provider store={}>
+            <Main>
+            </Main>
+          </Provider>
+      </div>
+      // <View style={styles.container}>
+      //   <Text style={styles.welcome}>Welcome to React Native!</Text>
+      //   <Text style={styles.instructions}>To get started, edit App.js</Text>
+      //   <Text style={styles.instructions}>{instructions}</Text>
+      // </View>
     );
   }
+}
+
+App.prototype = {
+  store: PropTypes.object.isRequired;
 }
 
 const styles = StyleSheet.create({
@@ -45,3 +61,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+export default App;
