@@ -1,0 +1,33 @@
+          <View >
+                <View style={styles.containerItem}>
+                    <Text style={styles.textStyle}>3567 NSA</Text>
+                </View>
+                <View style={styles.containerDetails}>
+                    <View style={{flex: 2, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start'}}>
+                        <View style={styles.containerHeader}>
+                            <Text style={styles.itemHeaderTitle}>MARCA</Text>
+                            <Text style={styles.itemHeaderText}>Seat</Text>
+                        </View>
+                        <View style={styles.containerHeader}>
+                            <Text style={styles.itemHeaderTitle}>ESTADO</Text>
+                            <Text style={styles.itemHeaderText}>Bueno</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.containerInfo}>
+                    <View style={styles.containerImage}>
+                        <View style={{backgroundColor: '#style', flex:2}}></View>
+                    </View>
+                    <View style={styles.containerDescriptions}>
+                        <View>
+                            <Text>Añadir comentario</Text>
+                        </View>
+                        <View>
+                            <Text>Añadir kilometraje</Text>
+                        </View>
+                    </View>
+                    <View style={styles.containerBtnSave}>
+                        <Button title="Guardar" color="#FF6666"></Button>
+                    </View>
+                </View>
+            </View>

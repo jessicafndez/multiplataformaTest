@@ -1,54 +1,99 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button  } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Image, TextInput  } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCoffee, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 4,
-        height: 150,
+    containerItem: {
+        flex: 3,
+        fontSize: 30,
+        backgroundColor: '#CC0066'
+    },
+    itemMatriculaBlock: {
+        flex: 1,
+        backgroundColor: '#F5F5F5',  
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 30,
-        borderBottomColor: '#FFFFFF',
+        borderBottomColor: '#E0E0E0',
         borderBottomWidth: 1,
-        paddingTop: 20,
-        paddingBottom: 1,
-        backgroundColor: '#FFFFFF',
     },
-    textStyle: {
-        fontSize: 30,
-        color: '#000000',
-        fontWeight: 'bold',
-        paddingTop:10
+    itemMatriculaBlockText: {
+        textAlign: 'center', 
+        fontWeight: 'bold', 
+        fontSize: 25,
     },
-    itemHeaderTitle: {
-        fontSize: 17,
-        color: '#A0A0A0',
-        fontWeight: 'bold',
+    itemBasicInfoBlock: {
+        flex: 2,
+        backgroundColor: '#F5F5F5',
+        justifyContent: 'center',
     },
-    itemHeaderText: {
-        fontSize: 20,
-        color: '#000000',
-        fontWeight: 'bold',
-    },
-    containerHeader: {
-        width: '50%'
-    },
-    containerInfo: {
-        backgroundColor: '#E0E0E0',
-        flex: 8
-
-    },
-    containerBtnSave: {
+    itemBasicInfoBlockRow: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingRight: 25,
+        paddingLeft: 25,
         paddingTop: 10,
         paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        flex: 2
+    },
+    itemBasicInfoBlockRowColumn: {
+        width: '50%',
+    },
+    itemBasicInfoTitle: {
+        fontWeight: 'bold', 
+        fontSize: 16,
+        color: '#C0C0C0'
+    },
+    itemBasicInfoSubtitle: {
+        fontWeight: 'bold', 
+        fontSize: 17,
+    },
+    itemExtaInfo: {
+        flex: 5,
+        backgroundColor: '#EFEBEB',
+        paddingRight: 25,
+        paddingLeft: 25,
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
+    itemExtraImage: {
+       flex: 3
+    },
+    carImage: {
+        flex: 2,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
+    },
+    itemExtraCommentRow: {
+        
+    },  
+    itemExtraComment: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    itemExtraKm: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    pencil: {
+        color: '#f4511e'
     }
 });
+styles.navigator
 
 
 export default class ItemScreen extends Component {
+    static navigationOptions = {
+        title: 'Recogida',
+        headerStyle: {
+            backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+    };
+
     constructor(props) {
         super(props);
     }
@@ -56,40 +101,47 @@ export default class ItemScreen extends Component {
     render() {
         console.log(this.props);
         return(
-            <View style={{flexDirection: 'column'}}>
-                <View style={styles.container}>
-                    <Text style={styles.textStyle}>3567 NSA</Text>
+            <View style={{ flex: 1, flexDirection: 'column',  }}>
+                <View style={styles.itemMatriculaBlock}>
+                    <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
                 </View>
-                <View style={{flex: 4, padding: 20, paddingTop:30, flexDirection: 'column'}}>
-                    <View style={{flex: 2, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start'}}>
-                        <View style={styles.containerHeader}>
-                            <Text style={styles.itemHeaderTitle}>MARCA</Text>
-                            <Text style={styles.itemHeaderText}>Seat</Text>
+                <View style={styles.itemBasicInfoBlock}>
+                    <View style={styles.itemBasicInfoBlockRow}>
+                        <View style={styles.itemBasicInfoBlockRowColumn}>
+                            <Text style={styles.itemBasicInfoTitle}>MARCA</Text>
+                            <Text style={styles.itemBasicInfoSubtitle}>Seat</Text>
                         </View>
-                        <View style={styles.containerHeader}>
-                            <Text style={styles.itemHeaderTitle}>ESTADO</Text>
-                            <Text style={styles.itemHeaderText}>Bueno</Text>
-                        </View>
-                    </View>
-
-                </View>
-                <View style={styles.containerInfo}>
-                    <View style={styles.containerImage}>
-                        <View style={{backgroundColor: '#style', flex:2}}></View>
-                    </View>
-                    <View style={styles.containerDescriptions}>
-                        <View>
-                            <Text>Añadir comentario</Text>
-                        </View>
-                        <View>
-                            <Text>Añadir kilometraje</Text>
+                        <View style={styles.itemBasicInfoBlockRowColumn}>
+                            <Text style={styles.itemBasicInfoTitle}>ESTADO</Text>
+                            <Text style={styles.itemBasicInfoSubtitle}>Bueno</Text>
                         </View>
                     </View>
-                    <View style={styles.containerBtnSave}>
-                        <Button title="Guardar" color="#FF6666"></Button>
+                    <View style={styles.itemBasicInfoBlockRow}>
+                        <View style={styles.itemBasicInfoBlockRowColumn}>
+                            <Text style={styles.itemBasicInfoTitle}>MODELO</Text>
+                            <Text style={styles.itemBasicInfoSubtitle}>Arona Xcellence</Text>
+                        </View>
+                        <View style={styles.itemBasicInfoBlockRowColumn}>
+                            <Text style={styles.itemBasicInfoTitle}>ENTREGA</Text>
+                            <Text style={styles.itemBasicInfoSubtitle}>Autotaller Fonollar</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
+                <View style={styles.itemExtaInfo}>
+                    <View style={styles.itemExtraImage}>
+                        <Image style={styles.carImage} 
+                            source={require('../resources/img/seat_arona.jpg')} />
+                    </View>
+                    <View style={styles.itemExtraComment}>
+                        <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
+                        <TextInput placeholder={'Añadir comentario'}></TextInput>
+                    </View>
+                    <View style={styles.itemExtraKm}>
+                        <Text>Km</Text>
+                        <TextInput placeholder={'Añadir kilometraje'}></TextInput>
+                    </View>
+                </View>
+              </View>
         )
     }
 }

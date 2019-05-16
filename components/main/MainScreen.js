@@ -7,7 +7,18 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 // import MyListItem from './MyListItem';
 
-class MainScreen extends Component {
+export default class MainScreen extends Component {
+    static navigationOptions = {
+      title: 'Home',
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+          fontWeight: 'bold',
+      },
+    };
+    
     constructor(props) {
         super(props);
         this.state ={ isLoading: true}  
@@ -105,10 +116,3 @@ class MainScreen extends Component {
 
 
 
-const AppNavigator = createStackNavigator({
-  MainScreen: {
-    screen: MainScreen
-  }
-});
-
-export default createAppContainer(AppNavigator);
