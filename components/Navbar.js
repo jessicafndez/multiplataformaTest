@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { View } from 'react-native';
 
 // font awesome
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+// import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
 import NavigationBar from 'react-native-navbar';
 
@@ -15,27 +15,27 @@ export default class Navbar extends Component {
 
     render() {
         return(
-            <View style={styles.navbar}>
+            <View style={styles.container}>
                 <NavigationBar
                     title={titleConfig}
-                    rightButton={
-                        <View>
-                            <FontAwesomeIcon icon={ faCoffee } />
-                        </View>
-                    }
+                    rightButton={rightButtonConfig}
                 />
             </View>
         )
     }
 }
 const styles = {
-    navbar: {
+    container: {
       flex: 1,
     },
   };
-   
-
+  
+  const rightButtonConfig = {
+    title: 'Next',
+    handler: () => alert('hello!'),
+  };
+  
   const titleConfig = {
     title: 'Hello, world',
   };
-   
+  

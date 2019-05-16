@@ -4,14 +4,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 
-import Navbar from './components/Navbar';
-import Main from './components/main/Main';
-
-// out
-
-
-// const
-// const store = configureStore();
+import AppNavigator from './components/AppNavigator';
 
 
 const instructions = Platform.select({
@@ -26,8 +19,7 @@ class App extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <Navbar></Navbar>
-        <Main></Main>
+        <AppNavigator></AppNavigator>
       </View>
     );
   }
