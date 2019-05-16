@@ -18,6 +18,7 @@
     "react-native": "0.59.8",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.2.1",
+    "react-native-maps": "git://github.com/react-native-community/react-native-maps.git#master",
     "react-native-navbar": "^2.1.0",
     "react-native-svg": "^9.4.0",
     "react-native-vector-icons": "^6.4.2",
