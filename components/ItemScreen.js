@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Image, TextInput  } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCoffee, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { SliderBox } from 'react-native-image-slider-box';
 
 const styles = StyleSheet.create({
     containerItem: {
@@ -16,6 +17,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomColor: '#E0E0E0',
         borderBottomWidth: 1,
+        paddingBottom: 10,
+        paddingTop: 10
     },
     itemMatriculaBlockText: {
         textAlign: 'center', 
@@ -26,13 +29,14 @@ const styles = StyleSheet.create({
         flex: 2,
         backgroundColor: '#F5F5F5',
         justifyContent: 'center',
+        paddingBottom: 15,
+        paddingTop: 15
     },
     itemBasicInfoBlockRow: {
         flex: 1,
         flexDirection: 'row',
         paddingRight: 25,
         paddingLeft: 25,
-        paddingTop: 10,
         paddingBottom: 10,
     },
     itemBasicInfoBlockRowColumn: {
@@ -52,31 +56,61 @@ const styles = StyleSheet.create({
         backgroundColor: '#EFEBEB',
         paddingRight: 25,
         paddingLeft: 25,
-        paddingTop: 10,
         paddingBottom: 10,
     },
     itemExtraImage: {
-       flex: 3
+        backgroundColor: '#EFEBEB',
+        flex: 3,
+        borderBottomColor: '#FFFFFF',
+        borderBottomWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     carImage: {
-        flex: 2,
-        width: null,
-        height: null,
-        resizeMode: 'contain'
+        flex: 3,
+        width: '90%',
+        height: 300,
+        resizeMode: 'contain',
     },
     itemExtraCommentRow: {
         
     },  
     itemExtraComment: {
+        backgroundColor: '#EFEBEB',
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingRight: 25,
+        paddingLeft: 25,
+        paddingTop: 5,
+        paddingBottom: 5,
+        borderBottomColor: '#FFFFFF',
+        borderBottomWidth: 1,
     },
     itemExtraKm: {
+        backgroundColor: '#EFEBEB',
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingRight: 25,
+        paddingLeft: 25,
+        paddingTop: 5,
+        paddingBottom: 5,
+        borderBottomColor: '#FFFFFF',
+        borderBottomWidth: 1,
     },
     pencil: {
         color: '#f4511e'
+    },
+    itemSaveContent: {
+        paddingRight: 25,
+        paddingLeft: 25,
+        backgroundColor: '#EFEBEB',
+        paddingTop: 15,
+        paddingBottom: 30
+    },
+    saveButton: {
+        marginTop: 5,
+        paddingTop: 15,
+        paddingBottom: 15
     }
 });
 styles.navigator
@@ -96,12 +130,25 @@ export default class ItemScreen extends Component {
 
     constructor(props) {
         super(props);
+      //  this.images = ['../resources/img/seat_arona.jpg'];
+      this.state = {
+        images: [
+            'https://source.unsplash.com/1024x768/?nature',
+            'https://source.unsplash.com/1024x768/?water',
+            'https://source.unsplash.com/1024x768/?girl',
+            'https://source.unsplash.com/1024x768/?tree'
+            ]
+        }
+    }
+
+    _onSaveItem = ()=> {
+
     }
 
     render() {
         console.log(this.props);
         return(
-            <View style={{ flex: 1, flexDirection: 'column',  }}>
+            <ScrollView style={{ flex: 1, flexDirection: 'column',  }}>
                 <View style={styles.itemMatriculaBlock}>
                     <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
                 </View>
@@ -127,21 +174,30 @@ export default class ItemScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <View style={styles.itemExtaInfo}>
-                    <View style={styles.itemExtraImage}>
-                        <Image style={styles.carImage} 
-                            source={require('../resources/img/seat_arona.jpg')} />
-                    </View>
-                    <View style={styles.itemExtraComment}>
-                        <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
-                        <TextInput placeholder={'Añadir comentario'}></TextInput>
-                    </View>
-                    <View style={styles.itemExtraKm}>
-                        <Text>Km</Text>
-                        <TextInput placeholder={'Añadir kilometraje'}></TextInput>
-                    </View>
+                <View style={styles.itemExtraImage}>
+                    {/* <Image style={styles.carImage} 
+                        source={require('../resources/img/seat_arona.jpg')} /> */}
+                    <SliderBox images={this.state.images} />
                 </View>
-              </View>
+                <View style={styles.itemExtraComment}>
+                    <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
+                    <TextInput placeholder={'Añadir comentario'}></TextInput>
+                </View>
+                <View style={styles.itemExtraKm}>
+                    <Text>Km</Text>
+                    <TextInput placeholder={'Añadir kilometraje'}></TextInput>
+                </View>
+     
+                <View style={styles.itemSaveContent}>
+                    <Button
+                        onPress = { this._onSaveItem }
+                        title = "GUARDAR"
+                        color = "#f4511e"
+                        style = { styles.saveButton }
+                        accessibilityLabel = "Learn more about this purple button"
+                        />
+                </View>
+            </ScrollView>
         )
     }
 }
