@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // change this to apply to react new version
 import { connect } from 'react-redux';
-import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
-import { List, ListItem } from "react-native-elements";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { AppRegistry, StyleSheet, FlatList, ActivityIndicator, Text, View  } from 'react-native';
+import { List, ListItem, Button } from "react-native-elements";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCoffee, faPencilAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
-// import MyListItem from './MyListItem';
+const styles = StyleSheet.create({
+  user: {
+    color: '#FFFFFF',
+    marginRight: 20
+  }
+});
 
 export default class MainScreen extends Component {
     static navigationOptions = {
@@ -17,6 +23,11 @@ export default class MainScreen extends Component {
       headerTitleStyle: {
           fontWeight: 'bold',
       },
+      headerRight: (
+        <FontAwesomeIcon style={styles.user} icon={ faUser } />
+
+      ),
+   
     };
     
     constructor(props) {
@@ -71,9 +82,50 @@ export default class MainScreen extends Component {
       )
     }
 
+    let listObjects = [];
+    for(var key in this.state.dataSource) {
+      console.log(this.state.dataSource[key]);
+      console.log("--");
+      let a = this.state.dataSource[key];
+      a.recogida = 1;
+      listObjects.push(a)
+    }
+
+    for(var key in this.state.displayName) {
+      console.log(this.state.displayName[key]);
+      console.log("--");
+      let a = this.state.displayName[key];
+      a.recogida = 0;
+      listObjects.push(a)
+    }
+
+    // Object.keys(this.state.dataSourceSaved).forEach(function(key){
+    //   let obj = obj[key];
+    //   obj.recogida = 0
+    //   listObjects.push(obj);
+    // });
+
+
     return(
       <View style={{flex: 10, backgroundColor: '#FFFFFF', flexDirection: 'column'}}
       containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+        <View style={{ flex: 2 }}>
+          <Text>Total: </Text>
+            <FlatList
+              data={listObjects}
+              extraData={this.state}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item }) => (
+                <ListItem
+                  leftAvatar={{ source: { uri: item.imageUrl } }}
+                  title={item.displayName}
+                  subtitle='subtitle' 
+                  onPress={() => navigate('ItemScreen', {id:  item.generatorID })}
+                  badge={{ value: item.instancesCount, textStyle: { color: 'white' }, containerStyle: { marginTop: -20 } }}
+                />
+              )}
+            />
+        </View>
         <View style={{flex: 5 }}>
           <Text>Pendientes recogida</Text>
           <FlatList
@@ -114,5 +166,6 @@ export default class MainScreen extends Component {
   }
 }
 
+AppRegistry.registerComponent('MainScreen', () => MainScreen);
 
 
