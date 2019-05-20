@@ -1,8 +1,12 @@
+'use strict';
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCoffee, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { SliderBox } from 'react-native-image-slider-box';
+
+import { RNCamera } from 'react-native-camera';
+import { withNavigationFocus } from 'react-navigation' 
 
 const styles = StyleSheet.create({
     containerItem: {
@@ -111,12 +115,31 @@ const styles = StyleSheet.create({
         marginTop: 5,
         paddingTop: 15,
         paddingBottom: 15
-    }
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'black',
+    },
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    capture: {
+        flex: 0,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        padding: 15,
+        paddingHorizontal: 20,
+        alignSelf: 'center',
+        margin: 20,
+    },
 });
 styles.navigator
 
 
-export default class ItemScreen extends Component {
+class ItemScreen extends Component {
     static navigationOptions = {
         title: 'Recogida',
         headerStyle: {
@@ -141,12 +164,40 @@ export default class ItemScreen extends Component {
         }
     }
 
-    _onSaveItem = ()=> {
+    async componentDidMount(){
+        this.requestCameraPermission() 
+      }
 
-    }
+    async requestCameraPermission() {
+        try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.CAMERA,
+              {
+                'title': 'Permiso de la cámara',
+                'message': 'La aplicación necesita acceso a tu cámara' +
+                           'para que pueda tomar fotos impresionantes.'
+              }
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              console.log("You can use the camera")
+            } else {
+              console.log("Camera permission denied")
+            }
+          } catch (err) {
+            console.warn(err)
+          }
+        }
+
+        takePicture = async function() {
+            if (this.camera) {
+              const options = { quality: 0.5, base64: true };
+              const data = await this.camera.takePictureAsync(options);
+              console.log(data.uri);
+            }
+          }
 
     render() {
-        console.log(this.props);
+        const { isFocused } = this.props
         return(
             <ScrollView style={{ flex: 1, flexDirection: 'column',  }}>
                 <View style={styles.itemMatriculaBlock}>
@@ -179,6 +230,39 @@ export default class ItemScreen extends Component {
                         source={require('../resources/img/seat_arona.jpg')} /> */}
                     <SliderBox images={this.state.images} />
                 </View>
+                <View style={styles.itemExtraImage}>
+                    <View style={styles.container}>
+                    { isFocused && <RNCamera  
+                        ref={ref => {
+                            this.camera = ref;
+                        }}
+                        style={styles.preview}
+                        type={RNCamera.Constants.Type.back}
+                        flashMode={RNCamera.Constants.FlashMode.on}
+                        androidCameraPermissionOptions={{
+                            title: 'Permission to use camera',
+                            message: 'We need your permission to use your camera',
+                            buttonPositive: 'Ok',
+                            buttonNegative: 'Cancel',
+                        }}
+                        androidRecordAudioPermissionOptions={{
+                            title: 'Permission to use audio recording',
+                            message: 'We need your permission to use your audio',
+                            buttonPositive: 'Ok',
+                            buttonNegative: 'Cancel',
+                        }}
+                        onGoogleVisionBarcodesDetected={({ barcodes }) => {
+                            console.log(barcodes);
+                        }}
+                        />
+                    }
+                        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
+                            <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
+                                <Text style={{ fontSize: 14 }}> SNAP </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
                 <View style={styles.itemExtraComment}>
                     <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
                     <TextInput placeholder={'Añadir comentario'}></TextInput>
@@ -202,5 +286,5 @@ export default class ItemScreen extends Component {
     }
 }
 
-
-AppRegistry.registerComponent('ItemScreen', () => FlexDirectionBasics);
+export default withNavigationFocus(ItemScreen) 
+// AppRegistry.registerComponent('ItemScreen', () => ItemScreen);

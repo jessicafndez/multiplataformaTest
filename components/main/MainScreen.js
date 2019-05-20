@@ -141,7 +141,7 @@ export default class MainScreen extends Component {
               renderItem={({ item }) => (
               <TouchableOpacity
               style={{backgroundColor: '#D7DDE2', color: '#FFFFFF'}}
-              onPress={ item.recogida ? () => navigate('ItemMap', {id:  item.generatorID }) : () => navigate('ItemScreen', {id:  item.generatorID }) }>
+              onPress={ item.recogida ? () => navigate('ItemMap', {id:  item.generatorID }) : () => navigate('CameraScreen', {id:  item.generatorID }) }>
                 <ListItem  
                   containerStyle={{backgroundColor: '#E1E8EE'}}
                   style={{backgroundColor: '#E1E8EE'}}
