@@ -1,12 +1,9 @@
-'use strict';
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCoffee, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCoffee, faPencilAlt, faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 import { SliderBox } from 'react-native-image-slider-box';
 
-import { RNCamera } from 'react-native-camera';
-import { withNavigationFocus } from 'react-navigation' 
 
 const styles = StyleSheet.create({
     containerItem: {
@@ -65,6 +62,7 @@ const styles = StyleSheet.create({
     itemExtraImage: {
         backgroundColor: '#EFEBEB',
         flex: 3,
+        minHeight: '20%',
         borderBottomColor: '#FFFFFF',
         borderBottomWidth: 1,
         justifyContent: 'center',
@@ -105,6 +103,7 @@ const styles = StyleSheet.create({
         color: '#f4511e'
     },
     itemSaveContent: {
+        flex: 2,
         paddingRight: 25,
         paddingLeft: 25,
         backgroundColor: '#EFEBEB',
@@ -135,11 +134,29 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 20,
     },
+    imagePlaceholder: {
+        flex: 4,
+        width: '100%',
+        backgroundColor: '#808080',
+    },
+    photoIcon: {
+        color:  '#A0A0A0',
+        fontSize: 25
+    },
+    welcome: {
+        flex: 1,
+        margin: 20,
+        backgroundColor: 'orange',
+        margin: 10,
+        textAlign: 'center',
+        fontSize: 20,
+        paddingTop: 70,
+      }
 });
 styles.navigator
 
 
-class ItemScreen extends Component {
+export default class ItemScreen extends Component {
     static navigationOptions = {
         title: 'Recogida',
         headerStyle: {
@@ -155,136 +172,88 @@ class ItemScreen extends Component {
         super(props);
       //  this.images = ['../resources/img/seat_arona.jpg'];
       this.state = {
-        images: [
-            'https://source.unsplash.com/1024x768/?nature',
-            'https://source.unsplash.com/1024x768/?water',
-            'https://source.unsplash.com/1024x768/?girl',
-            'https://source.unsplash.com/1024x768/?tree'
-            ]
+            images: [
+                'https://source.unsplash.com/1024x768/?nature',
+                'https://source.unsplash.com/1024x768/?water',
+                'https://source.unsplash.com/1024x768/?girl',
+                'https://source.unsplash.com/1024x768/?tree'
+                ],
+            carRef: 1
         }
+        
     }
 
-    async componentDidMount(){
-        this.requestCameraPermission() 
-      }
-
-    async requestCameraPermission() {
-        try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.CAMERA,
-              {
-                'title': 'Permiso de la cámara',
-                'message': 'La aplicación necesita acceso a tu cámara' +
-                           'para que pueda tomar fotos impresionantes.'
-              }
-            )
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              console.log("You can use the camera")
-            } else {
-              console.log("Camera permission denied")
-            }
-          } catch (err) {
-            console.warn(err)
-          }
-        }
-
-        takePicture = async function() {
-            if (this.camera) {
-              const options = { quality: 0.5, base64: true };
-              const data = await this.camera.takePictureAsync(options);
-              console.log(data.uri);
-            }
-          }
-
     render() {
-        const { isFocused } = this.props
+        const { isFocused } = this.props;
+        const { navigate } = this.props.navigation;
         return(
-            <ScrollView style={{ flex: 1, flexDirection: 'column',  }}>
-                <View style={styles.itemMatriculaBlock}>
-                    <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
-                </View>
-                <View style={styles.itemBasicInfoBlock}>
-                    <View style={styles.itemBasicInfoBlockRow}>
-                        <View style={styles.itemBasicInfoBlockRowColumn}>
-                            <Text style={styles.itemBasicInfoTitle}>MARCA</Text>
-                            <Text style={styles.itemBasicInfoSubtitle}>Seat</Text>
+            <View style={{flex: 1, backgroundColor:'blue'}}>
+                <ScrollView style={{flex: 1, backgroundColor: 'steelblue'}} showsVerticalScrollIndicator={false} >
+                    <View style={styles.itemMatriculaBlock}>
+                        <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
+                    </View>
+                    <View style={styles.itemBasicInfoBlock}>
+                        <View style={styles.itemBasicInfoBlockRow}>
+                            <View style={styles.itemBasicInfoBlockRowColumn}>
+                                <Text style={styles.itemBasicInfoTitle}>MARCA</Text>
+                                <Text style={styles.itemBasicInfoSubtitle}>Seat</Text>
+                            </View>
+                            <View style={styles.itemBasicInfoBlockRowColumn}>
+                                <Text style={styles.itemBasicInfoTitle}>ESTADO</Text>
+                                <Text style={styles.itemBasicInfoSubtitle}>Bueno</Text>
+                            </View>
                         </View>
-                        <View style={styles.itemBasicInfoBlockRowColumn}>
-                            <Text style={styles.itemBasicInfoTitle}>ESTADO</Text>
-                            <Text style={styles.itemBasicInfoSubtitle}>Bueno</Text>
+                        <View style={styles.itemBasicInfoBlockRow}>
+                            <View style={styles.itemBasicInfoBlockRowColumn}>
+                                <Text style={styles.itemBasicInfoTitle}>MODELO</Text>
+                                <Text style={styles.itemBasicInfoSubtitle}>Arona Xcellence</Text>
+                            </View>
+                            <View style={styles.itemBasicInfoBlockRowColumn}>
+                                <Text style={styles.itemBasicInfoTitle}>ENTREGA</Text>
+                                <Text style={styles.itemBasicInfoSubtitle}>Autotaller Fonollar</Text>
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.itemBasicInfoBlockRow}>
-                        <View style={styles.itemBasicInfoBlockRowColumn}>
-                            <Text style={styles.itemBasicInfoTitle}>MODELO</Text>
-                            <Text style={styles.itemBasicInfoSubtitle}>Arona Xcellence</Text>
-                        </View>
-                        <View style={styles.itemBasicInfoBlockRowColumn}>
-                            <Text style={styles.itemBasicInfoTitle}>ENTREGA</Text>
-                            <Text style={styles.itemBasicInfoSubtitle}>Autotaller Fonollar</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.itemExtraImage}>
-                    {/* <Image style={styles.carImage} 
-                        source={require('../resources/img/seat_arona.jpg')} /> */}
-                    <SliderBox images={this.state.images} />
-                </View>
-                <View style={styles.itemExtraImage}>
-                    <View style={styles.container}>
-                    { isFocused && <RNCamera  
-                        ref={ref => {
-                            this.camera = ref;
-                        }}
-                        style={styles.preview}
-                        type={RNCamera.Constants.Type.back}
-                        flashMode={RNCamera.Constants.FlashMode.on}
-                        androidCameraPermissionOptions={{
-                            title: 'Permission to use camera',
-                            message: 'We need your permission to use your camera',
-                            buttonPositive: 'Ok',
-                            buttonNegative: 'Cancel',
-                        }}
-                        androidRecordAudioPermissionOptions={{
-                            title: 'Permission to use audio recording',
-                            message: 'We need your permission to use your audio',
-                            buttonPositive: 'Ok',
-                            buttonNegative: 'Cancel',
-                        }}
-                        onGoogleVisionBarcodesDetected={({ barcodes }) => {
-                            console.log(barcodes);
-                        }}
-                        />
-                    }
-                        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
-                            <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-                                <Text style={{ fontSize: 14 }}> SNAP </Text>
+                    <View style={styles.itemExtraImage}>
+                        <View style={styles.imagePlaceholder}>
+                            <TouchableOpacity style={styles.capture}
+                                onPress={ ()=>navigate('CameraScreen', {id: this.state.carRef}) } >
+                                <View>
+                                    <FontAwesomeIcon style={styles.photoIcon} icon={ faCameraRetro } size="40"  />   
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
-                <View style={styles.itemExtraComment}>
-                    <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
-                    <TextInput placeholder={'Añadir comentario'}></TextInput>
-                </View>
-                <View style={styles.itemExtraKm}>
-                    <Text>Km</Text>
-                    <TextInput placeholder={'Añadir kilometraje'}></TextInput>
-                </View>
-     
-                <View style={styles.itemSaveContent}>
-                    <Button
-                        onPress = { this._onSaveItem }
-                        title = "GUARDAR"
-                        color = "#f4511e"
-                        style = { styles.saveButton }
-                        accessibilityLabel = "Learn more about this purple button"
-                        />
-                </View>
-            </ScrollView>
+                    <View style={styles.itemExtraComment}>
+                        <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
+                        <TextInput placeholder={'Añadir comentario'}></TextInput>
+                    </View>
+                    <View style={styles.itemExtraKm}>
+                        <Text>Km</Text>
+                        <TextInput placeholder={'Añadir kilometraje'}></TextInput>
+                    </View>
+                    <View style={styles.itemSaveContent}>
+                        <Button
+                            onPress = { this._onSaveItem }
+                            title = "GUARDAR"
+                            color = "#f4511e"
+                            style = { styles.saveButton }
+                            accessibilityLabel = "Learn more about this purple button"
+                            />
+                    </View>
+                    {/* <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text>
+   <Text style={styles.welcome}>Welcome to React Native</Text> */}
+                </ScrollView>
+            </View>
         )
     }
 }
 
-export default withNavigationFocus(ItemScreen) 
-// AppRegistry.registerComponent('ItemScreen', () => ItemScreen);
+AppRegistry.registerComponent('ItemScreen', () => ItemScreen);

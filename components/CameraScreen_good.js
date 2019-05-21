@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Slider } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCamera, faVideo, faStop } from '@fortawesome/free-solid-svg-icons'
 
 const landmarkSize = 2;
 
@@ -11,6 +9,15 @@ const flashModeOrder = {
   on: 'auto',
   auto: 'torch',
   torch: 'off',
+};
+
+const wbOrder = {
+  auto: 'sunny',
+  sunny: 'cloudy',
+  cloudy: 'shadow',
+  shadow: 'fluorescent',
+  fluorescent: 'incandescent',
+  incandescent: 'auto',
 };
 
 export default class CameraScreen extends React.Component {
@@ -32,15 +39,25 @@ export default class CameraScreen extends React.Component {
       maxDuration: 5,
       quality: RNCamera.Constants.VideoQuality["288p"],
     },
-    isRecording: false,
-    isLoadingImage: false,
-    imageUri: null
+    isRecording: false
   };
 
   getRatios = async function() {
     const ratios = await this.camera.getSupportedRatios();
     return ratios;
   };
+
+  toggleView() {
+    this.setState({
+      showGallery: !this.state.showGallery,
+    });
+  }
+
+  toggleFacing() {
+    this.setState({
+      type: this.state.type === 'back' ? 'front' : 'back',
+    });
+  }
 
   toggleFlash() {
     this.setState({
@@ -51,6 +68,18 @@ export default class CameraScreen extends React.Component {
   setRatio(ratio) {
     this.setState({
       ratio,
+    });
+  }
+
+  toggleWB() {
+    this.setState({
+      whiteBalance: wbOrder[this.state.whiteBalance],
+    });
+  }
+
+  toggleFocus() {
+    this.setState({
+      autoFocus: this.state.autoFocus === 'on' ? 'off' : 'on',
     });
   }
 
@@ -73,16 +102,10 @@ export default class CameraScreen extends React.Component {
   }
 
   takePicture = async function() {
-    this.setState({isLoadingImage: true});
     if (this.camera) {
-      const options = {
-        quality: 0.8,
-        base64: true,
-        fixOrientation: true, // Add this to prevent image rotated
-      };
-      const data = await this.camera.takePictureAsync(options);
-      let dataUri =  data.uri;
-      this.setState({ imageUri: data.uri });
+      this.camera.takePictureAsync().then(data => {
+        console.log('data: ', data);
+      });
     }
   };
 
@@ -178,21 +201,6 @@ export default class CameraScreen extends React.Component {
   }
 
   renderCamera() {
-    let { imageUri } = this.state;
-    if (imageUri != null) {
-        return(
-          <View style={{flex:1, backgroundColor: 'skyblue'}}>
-            <Image
-              source={{ uri: imageUri }}
-              style={{width: 500, height: 500}} 
-            />
-            <Text
-              style={styles.cancel}
-            >Cancel
-          </Text>
-        </View>
-        );
-    } else {
     return (
       <RNCamera
         ref={ref => {
@@ -222,8 +230,14 @@ export default class CameraScreen extends React.Component {
             justifyContent: 'space-around',
           }}
         >
+          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
+            <Text style={styles.flipText}> FLIP </Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
             <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.flipButton} onPress={this.toggleWB.bind(this)}>
+            <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
           </TouchableOpacity>
         </View>
         <View
@@ -249,7 +263,21 @@ export default class CameraScreen extends React.Component {
             alignSelf: 'flex-end',
           }}
         >
-          
+          <TouchableOpacity
+            style={[styles.flipButton, { 
+              flex: 0.3, 
+              alignSelf: 'flex-end',
+              backgroundColor: this.state.isRecording ? 'white' : 'darkred',
+            }]}
+            onPress={this.state.isRecording ? () => {} : this.takeVideo.bind(this)}
+          >
+            {
+              this.state.isRecording ?
+              <Text style={styles.flipText}> ☕ </Text>
+              :
+              <Text style={styles.flipText}> REC </Text>
+            }
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -261,43 +289,39 @@ export default class CameraScreen extends React.Component {
         >
           <TouchableOpacity
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
-            onPress={this.zoomIn.bind(this)}>
+            onPress={this.zoomIn.bind(this)}
+          >
             <Text style={styles.flipText}> + </Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
-            onPress={this.zoomOut.bind(this)}>
+            onPress={this.zoomOut.bind(this)}
+          >
             <Text style={styles.flipText}> - </Text>
           </TouchableOpacity>
-     
           <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }, this.state.isLoadingImage ? styles.disabled : styles.enabled]}
-            onPress={this.takePicture.bind(this)}>
-            <FontAwesomeIcon style={styles.photoIcon} icon={ faCamera } size="20"  />   
-
+            style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            onPress={this.toggleFocus.bind(this)}
+          >
+            <Text style={styles.flipText}> AF : {this.state.autoFocus} </Text>
           </TouchableOpacity>
-          
           <TouchableOpacity
-            style={[styles.flipButton, { 
-              flex: 0.3, 
-              alignSelf: 'flex-end',
-              backgroundColor: this.state.isRecording ? 'white' : 'darkred',
-            }]}
-            onPress={this.state.isRecording ? () => {} : this.takeVideo.bind(this)}>
-            {
-              this.state.isRecording ?
-              <FontAwesomeIcon style={styles.photoIcon} icon={ faStop } size="20"  /> 
-              :
-              <FontAwesomeIcon style={styles.photoIcon} icon={ faVideo } size="20"  />   
-            }
+            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+            onPress={this.takePicture.bind(this)}
+          >
+            <Text style={styles.flipText}> SNAP </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            onPress={this.toggleView.bind(this)}
+          >
+            <Text style={styles.flipText}> Gallery </Text>
           </TouchableOpacity>
         </View>
         {this.renderFaces()}
         {this.renderLandmarks()}
       </RNCamera>
     );
-          }
   }
 
   render() {
@@ -383,24 +407,4 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  photoIcon: {
-    color:  '#ffffff',
-  },
-  enabled: {
-    opacity: 1,
-  },
-  disabled: {
-    opacity: 0.3,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
-  },
-  cancel: {
-    color: "#f4511e",
-    fontSize: 40,
-  }
 });

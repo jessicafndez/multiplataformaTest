@@ -1,33 +1,21 @@
-          <View >
-                <View style={styles.containerItem}>
-                    <Text style={styles.textStyle}>3567 NSA</Text>
+
+                
+                
+                <View style={styles.itemExtraComment}>
+                    <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
+                    <TextInput placeholder={'Añadir comentario'}></TextInput>
                 </View>
-                <View style={styles.containerDetails}>
-                    <View style={{flex: 2, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start'}}>
-                        <View style={styles.containerHeader}>
-                            <Text style={styles.itemHeaderTitle}>MARCA</Text>
-                            <Text style={styles.itemHeaderText}>Seat</Text>
-                        </View>
-                        <View style={styles.containerHeader}>
-                            <Text style={styles.itemHeaderTitle}>ESTADO</Text>
-                            <Text style={styles.itemHeaderText}>Bueno</Text>
-                        </View>
-                    </View>
+                <View style={styles.itemExtraKm}>
+                    <Text>Km</Text>
+                    <TextInput placeholder={'Añadir kilometraje'}></TextInput>
                 </View>
-                <View style={styles.containerInfo}>
-                    <View style={styles.containerImage}>
-                        <View style={{backgroundColor: '#style', flex:2}}></View>
-                    </View>
-                    <View style={styles.containerDescriptions}>
-                        <View>
-                            <Text>Añadir comentario</Text>
-                        </View>
-                        <View>
-                            <Text>Añadir kilometraje</Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerBtnSave}>
-                        <Button title="Guardar" color="#FF6666"></Button>
-                    </View>
+     
+                <View style={styles.itemSaveContent}>
+                    <Button
+                        onPress = { this._onSaveItem }
+                        title = "GUARDAR"
+                        color = "#f4511e"
+                        style = { styles.saveButton }
+                        accessibilityLabel = "Learn more about this purple button"
+                        />
                 </View>
-            </View>
