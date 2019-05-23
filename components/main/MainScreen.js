@@ -4,10 +4,17 @@ import { connect } from 'react-redux';
 import { AppRegistry, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { List, ListItem, Button,SearchBar } from "react-native-elements";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCoffee, faPencilAlt, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faBars, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
+
+import { SideDrawer } from '../SideDrawer';
 
 const styles = StyleSheet.create({
-  user: {
+
+  menuIconsLeft: {
+    color: '#FFFFFF',
+    marginLeft: 20
+  },
+  menuIconsRight: {
     color: '#FFFFFF',
     marginRight: 20
   },
@@ -23,28 +30,51 @@ const styles = StyleSheet.create({
 });
 
 export default class MainScreen extends Component {
-    static navigationOptions = {
-      title: 'Home',
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-          fontWeight: 'bold',
-      },
-  
-      headerRight: (
-        <View style={{ flexDirection: 'row' }}>
-          <FontAwesomeIcon style={styles.user} icon={ faUser } />
-        </View>
-      ),
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: 'Home',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerLeft: (
+          <TouchableOpacity >
+            <FontAwesomeIcon style={styles.menuIconsLeft} icon={ faBars } size="20" />
+          </TouchableOpacity>
+        ),
+        headerRight: (
+          <TouchableOpacity style={{ flexDirection: 'row' }}
+          onPress={navigation.getParam('showSearchBar')}>
+            <FontAwesomeIcon style={styles.menuIconsRight} icon={ faSearch } size="20" />
+          </TouchableOpacity>
+        ),
+      }
+     
     };
     
     constructor(props) {
         super(props);
-        this.state ={ isLoading: true, showSearch: true, query: "" }  
+        this.state ={ isLoading: true, showSearch: false, query: "" }  
         this.state.fullList = [];
         this.state.filterList = [];
+
+        this.state.carsList =  [
+          { modelo: 'Arona', matricula: '0000AAA', estado: "Deplorable", image:require('../../resources/img/arona.jpg'), id: 1 },
+          { modelo: 'Ibiza', matricula: '0000BBB', estado: "Bueno", image:require('../../resources/img/ibiza.jpg'), id: 2 },
+          { modelo: 'Toledo', matricula: '0000CCC', estado: "Malo", image:require('../../resources/img/toledo.jpg'), id: 3 },
+          { modelo: 'Ibiza', matricula: '0000DDD', estado: "Malo", image:require('../../resources/img/ibiza.jpg'), id: 4 },
+          { modelo: 'Mii', matricula: '0000EEE', estado: "Mejorable", image:require('../../resources/img/mii.jpg'), id: 5 },
+          { modelo: 'León', matricula: '0000FFF', estado: "Normal", image:require('../../resources/img/leon.jpg'), id: 6 },
+          { modelo: 'Alhambra', matricula: '0000GGG', estado: "Bueno", image:require('../../resources/img/alhambra.jpg'), id: 7 },
+          { modelo: 'Ibiza', matricula: '000HHH', estado: "Accidentado", image:require('../../resources/img/ibiza.jpg'), id: 8 },
+          { modelo: 'Toledo', matricula: '0000III', estado: "Mejorable", image:require('../../resources/img/toledo.jpg'), id: 9 },
+          { modelo: 'Arona', matricula: '0000JJJ', estado: "Bueno", image:require('../../resources/img/arona.jpg'), id: 10 },
+        ];
+
+        this.state.count = 0
     }
 
     componentDidMount(){
@@ -62,7 +92,18 @@ export default class MainScreen extends Component {
       .catch((error) =>{
         console.error(error);
       });
+
+      this.props.navigation.setParams({ showSearchBar: this._showSearchBar });
   }
+
+  _showSearchBar = () => {
+    if(this.state.showSearch) {
+      this.setState({showSearch: false})
+    }
+    else {
+      this.setState({showSearch: true})
+    }
+  };
 
   handleQueryChange = query => {
     if(query.length == 0) {
@@ -90,6 +131,8 @@ export default class MainScreen extends Component {
     if(this.state.showSearch) {
       return (      
         <SearchBar   
+        containerStyle={{backgroundColor: '#FFFAFA', borderColor: '#eee' }}
+        style={{backgroundColor: '#FFFAFA', borderColor: '#eee' }}
           lightTheme     
           round
           placeholder="Buscar item"    
@@ -119,6 +162,8 @@ export default class MainScreen extends Component {
     this.setState({ filterList: newData });  
   };
 
+  keyExtractor = (item, index) => index.toString()
+
   render(){
     const {navigate} = this.props.navigation;
     const textColor = this.props.selected ? 'red' : 'black';
@@ -134,21 +179,22 @@ export default class MainScreen extends Component {
       containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
         <View style={{ flex: 5 }}>
             <FlatList
-              style={{backgroundColor: '#E1E8EE'}}
-              data={this.state.filterList}
+              style={{backgroundColor: '#FFFAFA'}}
+              data={this.state.carsList}
               extraData={this.state}
-              keyExtractor={this._keyExtractor}
+              keyExtractor={this.keyExtractor}
               renderItem={({ item }) => (
               <TouchableOpacity
               style={{backgroundColor: '#D7DDE2', color: '#FFFFFF'}}
-              onPress={ item.recogida ? () => navigate('ItemMap', {id:  item.generatorID }) : () => navigate('ItemScreen', {id:  item.generatorID }) }>
+              onPress={ item.recogida ? () => navigate('ItemMap', {id:  item.id }) : () => navigate('ItemScreen', {id:  item.id }) }>
                 <ListItem  
-                  containerStyle={{backgroundColor: '#E1E8EE'}}
-                  style={{backgroundColor: '#E1E8EE'}}
-                  leftAvatar={{ source: { uri: item.imageUrl } }}
-                  title={item.displayName}
-                  subtitle='subtitle' 
-                  badge={{ value: item.instancesCount, textStyle: { color: 'white' }, containerStyle: { marginTop: -20 } }}
+                  containerStyle={{ borderBottomColor: 'red' }}
+                  style={{backgroundColor: '#FFFAFA', borderBottomColor: '#eee' }}
+                  leftAvatar={{ source: item.image }}
+                  title={item.modelo}
+                  subtitle={item.matricula} 
+                  chevronColor="black"
+                  chevron
                 />
               </TouchableOpacity>
                

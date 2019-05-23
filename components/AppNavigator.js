@@ -11,10 +11,23 @@ const AppNav = createStackNavigator({
   MainScreen: { screen: MainScreen },
   ItemScreen: { screen: ItemScreen },
   ItemMap:    { screen: ItemMap },
-  CameraScreen: { screen: CameraScreen }
+  CameraScreen: { screen: CameraScreen, navigationOptions: () => ({
+    headerStyle: {
+      backgroundColor: 'transparent',
+    },
+    headerTransparent:  true
+  }), }
 },
 {
   initialRouteName: "MainScreen"
+},
+{
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: 'purple',
+    },
+  },
+
 });
 
 const AppNavigator = createAppContainer(AppNav);

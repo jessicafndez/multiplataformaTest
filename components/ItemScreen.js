@@ -9,11 +9,11 @@ const styles = StyleSheet.create({
     containerItem: {
         flex: 3,
         fontSize: 30,
-        backgroundColor: '#CC0066'
+        backgroundColor: '#FFFAFA'
     },
     itemMatriculaBlock: {
         flex: 1,
-        backgroundColor: '#F5F5F5',  
+        backgroundColor: '#FFFAFA',  
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomColor: '#E0E0E0',
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     itemBasicInfoBlock: {
-        flex: 2,
-        backgroundColor: '#F5F5F5',
+        flex: 3,
+        backgroundColor: '#FFFAFA',
         justifyContent: 'center',
         paddingBottom: 15,
         paddingTop: 15
@@ -54,15 +54,15 @@ const styles = StyleSheet.create({
     },
     itemExtaInfo: {
         flex: 5,
-        backgroundColor: '#EFEBEB',
+        backgroundColor: '#FFFAFA',
         paddingRight: 25,
         paddingLeft: 25,
         paddingBottom: 10,
     },
     itemExtraImage: {
         backgroundColor: '#EFEBEB',
-        flex: 3,
-        minHeight: '20%',
+        flex: 5,
+        // minHeight: '40%',
         borderBottomColor: '#FFFFFF',
         borderBottomWidth: 1,
         justifyContent: 'center',
@@ -74,11 +74,8 @@ const styles = StyleSheet.create({
         height: 300,
         resizeMode: 'contain',
     },
-    itemExtraCommentRow: {
-        
-    },  
     itemExtraComment: {
-        backgroundColor: '#EFEBEB',
+        backgroundColor: '#FFFAFA',
         flex: 1,
         flexDirection: 'row',
         paddingRight: 25,
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     itemExtraKm: {
-        backgroundColor: '#EFEBEB',
+        backgroundColor: '#FFFAFA',
         flex: 1,
         flexDirection: 'row',
         paddingRight: 25,
@@ -103,10 +100,10 @@ const styles = StyleSheet.create({
         color: '#f4511e'
     },
     itemSaveContent: {
-        flex: 2,
+        flex: 1,
         paddingRight: 25,
         paddingLeft: 25,
-        backgroundColor: '#EFEBEB',
+        backgroundColor: '#FFFAFA',
         paddingTop: 15,
         paddingBottom: 30
     },
@@ -131,7 +128,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 15,
         paddingHorizontal: 20,
-        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         margin: 20,
     },
     imagePlaceholder: {
@@ -143,17 +141,8 @@ const styles = StyleSheet.create({
         color:  '#A0A0A0',
         fontSize: 25
     },
-    welcome: {
-        flex: 1,
-        margin: 20,
-        backgroundColor: 'orange',
-        margin: 10,
-        textAlign: 'center',
-        fontSize: 20,
-        paddingTop: 70,
-      }
+
 });
-styles.navigator
 
 
 export default class ItemScreen extends Component {
@@ -170,8 +159,7 @@ export default class ItemScreen extends Component {
 
     constructor(props) {
         super(props);
-      //  this.images = ['../resources/img/seat_arona.jpg'];
-      this.state = {
+        this.state = {
             images: [
                 'https://source.unsplash.com/1024x768/?nature',
                 'https://source.unsplash.com/1024x768/?water',
@@ -180,15 +168,14 @@ export default class ItemScreen extends Component {
                 ],
             carRef: 1
         }
-        
     }
 
     render() {
         const { isFocused } = this.props;
         const { navigate } = this.props.navigation;
         return(
-            <View style={{flex: 1, backgroundColor:'blue'}}>
-                <ScrollView style={{flex: 1, backgroundColor: 'steelblue'}} showsVerticalScrollIndicator={false} >
+            <View style={{flex: 1, backgroundColor:'#D7DDE2'}}>
+                {/* <ScrollView style={{flex: 1, backgroundColor: 'steelblue'}} showsVerticalScrollIndicator={false} > */}
                     <View style={styles.itemMatriculaBlock}>
                         <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
                     </View>
@@ -215,14 +202,12 @@ export default class ItemScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.itemExtraImage}>
-                        <View style={styles.imagePlaceholder}>
-                            <TouchableOpacity style={styles.capture}
-                                onPress={ ()=>navigate('CameraScreen', {id: this.state.carRef}) } >
-                                <View>
-                                    <FontAwesomeIcon style={styles.photoIcon} icon={ faCameraRetro } size="40"  />   
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity style={styles.capture}
+                            onPress={ ()=>navigate('CameraScreen', {id: this.state.carRef}) } >
+                            <View>
+                                <FontAwesomeIcon style={styles.photoIcon} icon={ faCameraRetro } size="40"  />   
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.itemExtraComment}>
                         <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
@@ -241,19 +226,11 @@ export default class ItemScreen extends Component {
                             accessibilityLabel = "Learn more about this purple button"
                             />
                     </View>
-                    {/* <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text>
-   <Text style={styles.welcome}>Welcome to React Native</Text> */}
-                </ScrollView>
+                {/* </ScrollView> */}
             </View>
         )
     }
 }
+
 
 AppRegistry.registerComponent('ItemScreen', () => ItemScreen);

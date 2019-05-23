@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Slider, Dimensions, Image, ImageBackground, StatusBar } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCamera, faVideo, faStop } from '@fortawesome/free-solid-svg-icons'
+import { faCamera, faVideo, faStop, faBolt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { withNavigation } from 'react-navigation';
 
 const landmarkSize = 2;
 
@@ -11,9 +12,25 @@ const flashModeOrder = {
   on: 'auto',
   auto: 'torch',
   torch: 'off',
-};
+};  
 
-export default class CameraScreen extends React.Component {
+class CameraScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerLeft: (
+        <FontAwesomeIcon icon={ faTimes } size="30" 
+      style={{color:'#FFFFFF', paddingLeft:25}}
+     onPress={ () => navigation.goBack() } />
+      ),
+    };
+  };
+
+  constructor(props) {
+    super(props);
+
+    console.log(props)
+  }
+
   state = {
     flash: 'off',
     zoom: 0,
@@ -181,16 +198,26 @@ export default class CameraScreen extends React.Component {
     let { imageUri } = this.state;
     if (imageUri != null) {
         return(
-          <View style={{flex:1, backgroundColor: 'skyblue'}}>
-            <Image
-              source={{ uri: imageUri }}
-              style={{width: 500, height: 500}} 
-            />
-            <Text
-              style={styles.cancel}
-            >Cancel
-          </Text>
-        </View>
+          <ImageBackground
+            source={{ uri: imageUri }}
+            style={{flex: 1,}}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+                alignSelf: 'flex-end',
+                position: 'absolute',
+                bottom:5,
+                right: 5
+              }} >
+              <TouchableOpacity
+                style={[styles.flipButton, styles.saveImgButton, { flex: 1, alignSelf: 'flex-end' }]}
+                onPress={this.takePicture.bind(this)}>
+                <FontAwesomeIcon style={styles.photoIcon} icon={ faCamera } size="20"  />   
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
         );
     } else {
     return (
@@ -212,28 +239,14 @@ export default class CameraScreen extends React.Component {
         onFaceDetectionError={this.onFaceDetectionError}
         focusDepth={this.state.depth}
         permissionDialogTitle={'Permission to use camera'}
-        permissionDialogMessage={'We need your permission to use your camera phone'}
-      >
+        permissionDialogMessage={'We need your permission to use your camera phone'}>
         <View
           style={{
-            flex: 0.5,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}
-        >
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 0.4,
+            flex: 10,
             backgroundColor: 'transparent',
             flexDirection: 'row',
             alignSelf: 'flex-end',
-          }}
-        >
+          }}>
           <Slider
             style={{ width: 150, marginTop: 15, alignSelf: 'flex-end' }}
             onValueChange={this.setFocusDepth.bind(this)}
@@ -241,24 +254,20 @@ export default class CameraScreen extends React.Component {
             disabled={this.state.autoFocus === 'on'}
           />
         </View>
+
         <View
           style={{
-            flex: 0.1,
+            flex: 1,
             backgroundColor: 'transparent',
             flexDirection: 'row',
             alignSelf: 'flex-end',
-          }}
-        >
-          
-        </View>
-        <View
-          style={{
-            flex: 0.1,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            alignSelf: 'flex-end',
-          }}
-        >
+            bottom: 5
+          }}>
+           <TouchableOpacity style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]} 
+           onPress={this.toggleFlash.bind(this)}>
+            {/* <Text style={styles.flipText}> FLASH: {this.state.flash} </Text> */}
+            <FontAwesomeIcon style={styles.photoIcon} icon={ faBolt } size="20"  />  
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
             onPress={this.zoomIn.bind(this)}>
@@ -275,14 +284,13 @@ export default class CameraScreen extends React.Component {
             style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }, this.state.isLoadingImage ? styles.disabled : styles.enabled]}
             onPress={this.takePicture.bind(this)}>
             <FontAwesomeIcon style={styles.photoIcon} icon={ faCamera } size="20"  />   
-
           </TouchableOpacity>
           
           <TouchableOpacity
             style={[styles.flipButton, { 
               flex: 0.3, 
               alignSelf: 'flex-end',
-              backgroundColor: this.state.isRecording ? 'white' : 'darkred',
+              backgroundColor: this.state.isRecording ? 'white' : '#20B2AA',
             }]}
             onPress={this.state.isRecording ? () => {} : this.takeVideo.bind(this)}>
             {
@@ -346,7 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   picButton: {
-    backgroundColor: 'darkseagreen',
+    backgroundColor: '#1E90FF',
   },
   galleryButton: {
     backgroundColor: 'indianred',
@@ -383,7 +391,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  photoIcon: {
+  photoIcon: { 
     color:  '#ffffff',
   },
   enabled: {
@@ -402,5 +410,20 @@ const styles = StyleSheet.create({
   cancel: {
     color: "#f4511e",
     fontSize: 40,
+  },
+  saveImgButton: {
+    backgroundColor: '#1E90FF',
+    color: '#FFFFFF',
+    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    opacity: 1,
+    // alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    right:0
   }
 });
+
+export default withNavigation(CameraScreen);
