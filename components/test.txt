@@ -1,21 +1,9 @@
-
-                
-                
-                <View style={styles.itemExtraComment}>
-                    <FontAwesomeIcon style={styles.pencil} icon={ faPencilAlt } />
-                    <TextInput placeholder={'Añadir comentario'}></TextInput>
-                </View>
-                <View style={styles.itemExtraKm}>
-                    <Text>Km</Text>
-                    <TextInput placeholder={'Añadir kilometraje'}></TextInput>
-                </View>
-     
-                <View style={styles.itemSaveContent}>
-                    <Button
-                        onPress = { this._onSaveItem }
-                        title = "GUARDAR"
-                        color = "#f4511e"
-                        style = { styles.saveButton }
-                        accessibilityLabel = "Learn more about this purple button"
-                        />
-                </View>
+         // this.state = {
+        //     images: [
+        //         'https://source.unsplash.com/1024x768/?nature',
+        //         'https://source.unsplash.com/1024x768/?water',
+        //         'https://source.unsplash.com/1024x768/?girl',
+        //         'https://source.unsplash.com/1024x768/?tree'
+        //         ],
+        //     carRef: 1
+        // }

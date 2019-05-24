@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // change this to apply to react new version
 import { connect } from 'react-redux';
-import { AppRegistry, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { AppRegistry, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, View, Text, ScrollView } from 'react-native';
 import { List, ListItem, Button,SearchBar } from "react-native-elements";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCoffee, faBars, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 
-import { SideDrawer } from '../SideDrawer';
+// import { SideDrawer } from '../SideDrawer';
 
 const styles = StyleSheet.create({
 
@@ -26,6 +26,29 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: '#FFFFFF',
     backgroundColor: '#f4511e'
+  },
+  container: {
+    paddingTop: 20,
+    flex: 1
+  },
+  navItemStyle: {
+    padding: 10
+  },
+  navSectionStyle: {
+    backgroundColor: 'lightgrey'
+  },
+  sectionHeadingStyle: {
+    paddingVertical: 10,
+    paddingHorizontal: 5
+  },
+  containerMenu: {
+    width: '70%',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    left: 0,
+    top: 0,
+    backgroundColor: '#DCDCDC'
   }
 });
 
@@ -41,7 +64,8 @@ export default class MainScreen extends Component {
             fontWeight: 'bold',
         },
         headerLeft: (
-          <TouchableOpacity >
+          <TouchableOpacity 
+            onPress={navigation.getParam('showMenu')}>
             <FontAwesomeIcon style={styles.menuIconsLeft} icon={ faBars } size="20" />
           </TouchableOpacity>
         ),
@@ -57,13 +81,11 @@ export default class MainScreen extends Component {
     
     constructor(props) {
         super(props);
-        this.state ={ isLoading: true, showSearch: false, query: "" }  
-        this.state.fullList = [];
-        this.state.filterList = [];
+        this.state ={ isLoading: true, showSearch: false, showMenu: false, query: "" }  
 
         this.state.carsList =  [
           { modelo: 'Arona', matricula: '0000AAA', estado: "Deplorable", image:require('../../resources/img/arona.jpg'), id: 1 },
-          { modelo: 'Ibiza', matricula: '0000BBB', estado: "Bueno", image:require('../../resources/img/ibiza.jpg'), id: 2 },
+          { modelo: 'Ibiza', matricula: '0000BBB', estado: "Bueno", image: null, id: 2 },
           { modelo: 'Toledo', matricula: '0000CCC', estado: "Malo", image:require('../../resources/img/toledo.jpg'), id: 3 },
           { modelo: 'Ibiza', matricula: '0000DDD', estado: "Malo", image:require('../../resources/img/ibiza.jpg'), id: 4 },
           { modelo: 'Mii', matricula: '0000EEE', estado: "Mejorable", image:require('../../resources/img/mii.jpg'), id: 5 },
@@ -94,6 +116,7 @@ export default class MainScreen extends Component {
       });
 
       this.props.navigation.setParams({ showSearchBar: this._showSearchBar });
+      this.props.navigation.setParams({ showMenu: this._showMenu });
   }
 
   _showSearchBar = () => {
@@ -104,6 +127,16 @@ export default class MainScreen extends Component {
       this.setState({showSearch: true})
     }
   };
+
+  _showMenu = () => {
+    console.log("Menu shooow");
+    if(this.state.showMenu) {
+      this.setState({showMenu: false});
+    }
+    else {
+      this.setState({showMenu: true});
+    }
+  }
 
   handleQueryChange = query => {
     if(query.length == 0) {
@@ -152,6 +185,51 @@ export default class MainScreen extends Component {
     }
   };
 
+  renderMenu() {
+    if(this.state.showMenu) {
+      console.log("Render menu");
+      return (
+        <View style={styles.containerMenu}>
+        <ScrollView>
+          <View>
+            <Text style={styles.sectionHeadingStyle}>
+              Recogidas
+            </Text>
+            <View style={styles.navSectionStyle}>
+              <Text style={styles.navItemStyle} >
+              Page1
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.sectionHeadingStyle}>
+              Entregas
+            </Text>
+            <View style={styles.navSectionStyle}>
+              <Text style={styles.navItemStyle} >
+                Page2
+              </Text>
+              <Text style={styles.navItemStyle}>
+                Page3
+              </Text>
+            </View>            
+          </View>
+          <View>
+            <View style={styles.navSectionStyle}>
+              <Text style={styles.navItemStyle} >
+                Cerrar sesión
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+      );
+    }
+    else {
+      console.log("Close menu");
+    }
+  }
+
   searchFilterFunction = text => {    
     this.handleQueryChange(text);   
     const newData = this.state.fullList.filter(item => {      
@@ -190,7 +268,7 @@ export default class MainScreen extends Component {
                 <ListItem  
                   containerStyle={{ borderBottomColor: 'red' }}
                   style={{backgroundColor: '#FFFAFA', borderBottomColor: '#eee' }}
-                  leftAvatar={{ source: item.image }}
+                  leftAvatar={{ source: item.image ? item.image : "" }}
                   title={item.modelo}
                   subtitle={item.matricula} 
                   chevronColor="black"
@@ -203,6 +281,7 @@ export default class MainScreen extends Component {
               ListHeaderComponent={this.renderHeader}   
             />
         </View>
+        {this.renderMenu()}
       </View>
     );
   }

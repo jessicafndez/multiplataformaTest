@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Image, TextInput, Button, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCoffee, faPencilAlt, faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 import { SliderBox } from 'react-native-image-slider-box';
-
 
 const styles = StyleSheet.create({
     containerItem: {
@@ -159,23 +158,58 @@ export default class ItemScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            images: [
-                'https://source.unsplash.com/1024x768/?nature',
-                'https://source.unsplash.com/1024x768/?water',
-                'https://source.unsplash.com/1024x768/?girl',
-                'https://source.unsplash.com/1024x768/?tree'
-                ],
-            carRef: 1
-        }
+    }
+
+    componentDidMount() {
+        let carsList =  [
+            { modelo: 'Arona', matricula: '0000AAA', estado: "Deplorable", image:require('../resources/img/arona.jpg'), id: 1 },
+            { modelo: 'Ibiza', matricula: '0000BBB', estado: "Bueno", image: null, id: 2 },
+            { modelo: 'Toledo', matricula: '0000CCC', estado: "Malo", image:require('../resources/img/toledo.jpg'), id: 3 },
+            { modelo: 'Ibiza', matricula: '0000DDD', estado: "Malo", image:require('../resources/img/ibiza.jpg'), id: 4 },
+            { modelo: 'Mii', matricula: '0000EEE', estado: "Mejorable", image:require('../resources/img/mii.jpg'), id: 5 },
+            { modelo: 'León', matricula: '0000FFF', estado: "Normal", image:require('../resources/img/leon.jpg'), id: 6 },
+            { modelo: 'Alhambra', matricula: '0000GGG', estado: "Bueno", image:require('../resources/img/alhambra.jpg'), id: 7 },
+            { modelo: 'Ibiza', matricula: '000HHH', estado: "Accidentado", image:require('../resources/img/ibiza.jpg'), id: 8 },
+            { modelo: 'Toledo', matricula: '0000III', estado: "Mejorable", image:require('../resources/img/toledo.jpg'), id: 9 },
+            { modelo: 'Arona', matricula: '0000JJJ', estado: "Bueno", image:require('../resources/img/arona.jpg'), id: 10 },
+          ];
+  
+        const itemId = this.props.navigation.getParam('id', 'NO-ID');
+        this.setState({ item: carsList[itemId] });
+
+        console.log("component did mpount");
     }
 
     render() {
         const { isFocused } = this.props;
         const { navigate } = this.props.navigation;
+        
+        if(this.state) {
+            const { item } = this.state.item;
+            
+            if(item) {
+                console.log("item exists");
+            }
+            else {
+                console.log("item doesnt exists");
+            }
+        }
+        else {
+            item = null;
+        }
+        // console.log("Item: ");
+        // console.log(item);
+
+        // if(item) {
+        //     console.log("item exists");
+        // }
+        // else {
+        //     console.log("item doesnt exists");
+        // }
+    
         return(
             <View style={{flex: 1, backgroundColor:'#D7DDE2'}}>
-                {/* <ScrollView style={{flex: 1, backgroundColor: 'steelblue'}} showsVerticalScrollIndicator={false} > */}
+                <ScrollView style={{flex: 1, backgroundColor: 'steelblue'}} showsVerticalScrollIndicator={false} >
                     <View style={styles.itemMatriculaBlock}>
                         <Text style={styles.itemMatriculaBlockText}>3567 NSA</Text>
                     </View>
@@ -202,8 +236,24 @@ export default class ItemScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.itemExtraImage}>
+                        {item && (
+                            <ImageBackground source={item.image} style={{width:'100%', height: '100%'}}></ImageBackground>
+                        )}
+                        {!item && (
+                            <Text>Hello World</Text>
+                        )}
+                        {/* {!item && (
+                            <TouchableOpacity style={styles.capture}
+                                onPress={ ()=>navigate('CameraScreen', {id: this.state.carRef}) } >
+                                <View>
+                                    <FontAwesomeIcon style={styles.photoIcon} icon={ faCameraRetro } size="40"  />   
+                                </View>
+                            </TouchableOpacity>
+                        )} */}
+                    </View>
+                    <View style={{flex:1}}>
                         <TouchableOpacity style={styles.capture}
-                            onPress={ ()=>navigate('CameraScreen', {id: this.state.carRef}) } >
+                            onPress={ ()=>navigate('CameraScreen_good', {id: this.state.carRef}) } >
                             <View>
                                 <FontAwesomeIcon style={styles.photoIcon} icon={ faCameraRetro } size="40"  />   
                             </View>
@@ -226,7 +276,7 @@ export default class ItemScreen extends Component {
                             accessibilityLabel = "Learn more about this purple button"
                             />
                     </View>
-                {/* </ScrollView> */}
+                </ScrollView>
             </View>
         )
     }

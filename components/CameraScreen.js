@@ -305,7 +305,7 @@ class CameraScreen extends React.Component {
         {this.renderLandmarks()}
       </RNCamera>
     );
-          }
+    }
   }
 
   render() {

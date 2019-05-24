@@ -20,7 +20,7 @@ const wbOrder = {
   incandescent: 'auto',
 };
 
-export default class CameraScreen extends React.Component {
+export default class CameraScreen_good extends React.Component {
   state = {
     flash: 'off',
     zoom: 0,
